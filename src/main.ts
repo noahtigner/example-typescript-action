@@ -6,10 +6,11 @@ const getBranchName = async (): Promise<string> => {
   return new Promise((resolve, reject) => {
     exec('git branch --show-current --no-color', (err, stdout, stderr) => {
       if (err) {
-        core.debug(err.message)
-        core.debug(stderr)
+        core.info(err.message)
         reject(err)
       }
+      core.info(`stdout: ${stdout}`)
+      core.info(`stderr: ${stderr}`)
       resolve(stdout.trim())
     })
   })
