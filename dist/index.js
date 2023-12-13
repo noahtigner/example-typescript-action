@@ -2753,7 +2753,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(186));
+const child_process_1 = __nccwpck_require__(81);
 const wait_1 = __nccwpck_require__(259);
+const getBranchName = async () => {
+    return new Promise((resolve, reject) => {
+        (0, child_process_1.exec)('git branch --show-current --no-color', (err, stdout, stderr) => {
+            if (err) {
+                core.debug(err.message);
+                core.debug(stderr);
+                reject(err);
+            }
+            resolve(stdout.trim());
+        });
+    });
+};
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -2761,6 +2774,7 @@ const wait_1 = __nccwpck_require__(259);
 async function run() {
     try {
         const ms = core.getInput('milliseconds');
+        core.info(`Current branch is ${await getBranchName()}`);
         // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         core.debug(`Waiting ${ms} milliseconds ...`);
         // Log the current timestamp, wait, then log the new timestamp
@@ -2811,6 +2825,14 @@ exports.wait = wait;
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 81:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
